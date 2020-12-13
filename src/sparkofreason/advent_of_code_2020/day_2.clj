@@ -19,13 +19,22 @@
   [{:keys [min max char password]}]
   (<= min (->> password (filter #(= char %)) count) max))
 
-(defn valid-passwords
-  [input]
-  (->> input
-    parse-input
-    (filter valid?)))
-
-(-> "resources/day-2.txt"
+(->> "resources/day-2.txt"
     slurp
-    valid-passwords
+    parse-input
+    (filter valid?)
     count)
+
+(defn valid2?
+  [{:keys [min max char password]}]
+  (let [l (count password)
+        c1 (and (<= min l) (= char (nth password (dec min))))
+        c2 (and (<= max l) (= char (nth password (dec max))))]
+    (and (or c1 c2) (or (not c1) (not c2)))))
+
+(->> "resources/day-2.txt"
+    slurp
+    parse-input
+    (filter valid2?)
+    count)
+
